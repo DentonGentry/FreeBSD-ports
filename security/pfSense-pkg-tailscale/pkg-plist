@@ -1,0 +1,9 @@
+pkg/tailscale.inc
+pkg/tailscale.xml
+www/tailscale_auth.php
+/etc/inc/priv/tailscale.priv.inc
+/var/lib/tailscale/.notempty
+%%DATADIR%%/info.xml
+@dir /etc/inc/priv
+@dir /etc/inc
+@dir /var/lib/tailscale

@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<pfsensepkgs>
+	<package>
+		<name>Tailscale</name>
+		<internal_name>tailscale</internal_name>
+		<pkginfolink>https://tailscale.com/</pkginfolink>
+		<descr><![CDATA[Tailscale is a mesh VPN alternative, based on WireGuard, that connects your computers, databases, and services together securely without any proxies.]]></descr>
+		<website>http://tailscale.com/</website>
+		<category>VPN</category>
+		<version>%%PKGVERSION%%</version>
+		<maintainer>support@tailscale.com</maintainer>
+		<configurationfile>tailscale.xml</configurationfile>
+		<only_for_archs>i386 amd64 aarch64 armv7</only_for_archs>
+	</package>
+</pfsensepkgs>

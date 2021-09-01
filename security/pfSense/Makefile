@@ -63,6 +63,7 @@ RUN_DEPENDS=	bind-tools>=0:dns/bind-tools \
 		ssh_tunnel_shell>=0:sysutils/ssh_tunnel_shell \
 		sshguard>=0:security/sshguard \
 		strongswan>=0:security/strongswan \
+		tailscale>=0:security/tailscale \
 		uclcmd>=0:devel/uclcmd \
 		unbound>=0:dns/unbound \
 		voucher>=0:sysutils/voucher \

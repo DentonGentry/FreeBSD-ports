@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE packagegui SYSTEM "../schema/packages.dtd">
+<?xml-stylesheet type="text/xsl" href="../xsl/package.xsl"?>
+<packagegui>
+	<copyright>
+	<![CDATA[
+/*
+ * tailscale.xml
+ *
+ * part of pfSense (https://www.pfsense.org)
+ * Copyright (c) 2009-2021 Tailscale, Inc.
+ * All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+	]]>
+	</copyright>
+        <description>Connect all your devices using WireGuard, without the hassle.</description>
+	<name>Tailscale</name>
+	<version>%%PKGVERSION%%</version>
+	<title>VPN: Tailscale</title>
+	<include_file>/usr/local/pkg/tailscale.inc</include_file>
+	<menu>
+		<name>tailscale</name>
+		<tooltiptext>Set Tailscale settings.</tooltiptext>
+		<section>VPN</section>
+		<url>/pkg_edit.php?xml=tailscale.xml</url>
+	</menu>
+	<service>
+		<name>tailscale</name>
+		<rcfile>tailscale.sh</rcfile>
+		<executable>tailscaled</executable>
+		<description>Tailscale VPN</description>
+	</service>
+	<tabs>
+		<tab>
+			<text>Settings</text>
+			<url>/pkg_edit.php?xml=tailscale.xml</url>
+			<active/>
+		</tab>
+		<tab>
+			<text>Authenticate</text>
+			<url>/tailscale_auth.php</url>
+		</tab>
+	</tabs>
+	<advanced_options>enabled</advanced_options>
+	<fields>
+		<field>
+			<fielddescr>Enable Tailscale</fielddescr>
+			<fieldname>enable</fieldname>
+			<type>checkbox</type>
+			<description>Check to enable Tailscale.</description>
+		</field>
+		<field>
+			<fielddescr>Advertise routes</fielddescr>
+			<fieldname>routes</fieldname>
+			<type>interfaces_selection</type>
+			<description>Select routes to advertise to Tailscale network</description>
+			<multiple/>
+			<size>10</size>
+			<hideinterfaceregex>(wan|loopback)</hideinterfaceregex>
+			<showvirtualips/>
+			<showips/>
+		</field>
+		<field>
+			<fielddescr>Advertise Exit Node</fielddescr>
+			<fieldname>advertise_exit_node</fieldname>
+			<type>checkbox</type>
+			<description>Advertise as an exit node.</description>
+		</field>
+	</fields>
+	<custom_php_install_command>
+		tailscale_install();
+	</custom_php_install_command>
+	<custom_php_deinstall_command>
+		tailscale_deinstall();
+	</custom_php_deinstall_command>
+	<custom_php_resync_config_command>
+		tailscale_resync_config();
+	</custom_php_resync_config_command>
+	<custom_php_validation_command>
+		validate_input_tailscale($_POST, $input_errors);
+	</custom_php_validation_command>
+</packagegui>
