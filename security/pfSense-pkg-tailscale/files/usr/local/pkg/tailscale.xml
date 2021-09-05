@@ -62,15 +62,10 @@
 			<description>Check to enable Tailscale.</description>
 		</field>
 		<field>
-			<fielddescr>Advertise routes</fielddescr>
-			<fieldname>routes</fieldname>
-			<type>interfaces_selection</type>
-			<description>Select routes to advertise to Tailscale network</description>
-			<multiple/>
-			<size>10</size>
-			<hideinterfaceregex>(wan|loopback)</hideinterfaceregex>
-			<showvirtualips/>
-			<showips/>
+			<fielddescr>Advertise LAN Route</fielddescr>
+			<fieldname>advertise_lan_route</fieldname>
+			<type>checkbox</type>
+			<description>Advertise route to LAN subnet to Tailscale network.</description>
 		</field>
 		<field>
 			<fielddescr>Advertise Exit Node</fielddescr>
