@@ -34,65 +34,28 @@ if (is_array($config['installedpackages']['tailscale'])) {
 	$tailscale_config = array();
 }
 
+if ($config['system']['webgui']['protocol'] == "https") {
+        // Ensure that we have a webConfigurator CERT
+        $cert =& lookup_cert($config['system']['webgui']['ssl-certref']);
+        if (is_array($cert) && $cert['crt'] && $cert['prv']) {
+        	$crt = base64_decode($cert['crt']);
+        	$key = base64_decode($cert['prv']);
+		putenv("TLS_CRT_PEM=" . $crt);
+		putenv("TLS_KEY_PEM=" . $key);
+	}
+}
+
 $tailscaleup = "/usr/local/bin/tailscale --socket=/run/tailscale/tailscaled.sock";
 if ($tailscale_config['enable'] != "on") {
 	$tailscaleup .= " down";
 } else {
-	$tailscaleup .= " up --reset";
-
-	if ($tailscale_config['advertise_lan_route'] == 'on') {
-		$iflist = get_configured_interface_list();
-		foreach ($iflist as $if => $ifname) {
-			if ($ifname == "lan") {
-				$if_ipv4 = get_interface_ip($if);
-				$if_snbitsv4 = get_interface_subnet($if);
-				$if_subnet = gen_subnet($if_ipv4, $if_snbitsv4);
-				$tailscaleup .= " --advertise-routes=" . $if_subnet . "/" . $if_snbitsv4;
-			}
-		}
-	}
-	if ($tailscale_config['advertise_exit_node'] == 'on') {
-		$tailscaleup .= " --advertise-exit-node=true";
-	}
-
-	$tailscaleup .= " --accept-dns=false --accept-routes=true --reset";
+	$tailscaleup .= " web --listen=0.0.0.0:8443";
 }
 
 include("head.inc");
 if ($is_admin) {
-	echo "<div>" . $tailscaleup . "</div>";
-
-	$fds = array(
-		0 => array("pipe", "r"),
-		1 => array("pipe", "w"),
-		2 => array("pipe", "w")
-	);
-	$process = proc_open($tailscaleup, $fds, $pipes);
-	if (is_resource($process)) {
-		stream_set_blocking($pipes[1],0);
-		stream_set_blocking($pipes[2],0);
-		echo "<div>";
-		$out = "";
-		$loop = true;
-		while ($loop) {
-			$out .= fread($pipes[1], 1024);
-			$out .= fread($pipes[2], 1024);
-			if (strpos($out, "https://") !== false) {
-				$loop = false;
-			} else if (feof($pipes[1]) && feof($pipes[2])) {
-				$loop = false;
-			} else {
-				usleep(500000);
-			}
-		}
-		echo $out . "</div>";
-	} else {
-		echo "<div>Command failed</div>";
-	}
-	fclose($pipes[0]);
-	fclose($pipes[1]);
-	fclose($pipes[2]);
-	proc_close($process);
+	shell_exec($tailscaleup);
+	echo '<iframe width="400" height="500" src="https://10.1.10.79:8443/"></iframe>';
 } else {
 	echo "Error: " . $username . " is not an Admin.";
 }
